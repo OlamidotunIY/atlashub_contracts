@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package atlashub.intelligence.v1alpha1;
+
+import "google/protobuf/struct.proto";
+
+option java_package = "com.atlashub.contracts.intelligence.v1alpha1";
+option java_multiple_files = true;
+option java_outer_classname = "ToolGatewayProto";
+
+// INTERNAL ONLY: Java is tool registry, identity, RBAC and business-command authority.
+// Access requires mutually authenticated service channel + short-lived delegated identity.
+// Do not expose this service or generated client in the public browser SDK.
+service AuthorizedToolGatewayService {
+  rpc ListAuthorizedTools(ListAuthorizedToolsRequest) returns (ListAuthorizedToolsResponse);
+  rpc ExecuteAuthorizedTool(ExecuteAuthorizedToolRequest) returns (ExecuteAuthorizedToolResponse);
+}
+
+message ListAuthorizedToolsRequest {
+  string conversation_id = 1;
+}
+
+message AuthorizedToolDescriptor {
+  string tool_id = 1;
+  string version = 2;
+  string display_description = 3;
+  string arguments_schema_json = 4;
+  bool requires_approval = 5;
+}
+
+message ListAuthorizedToolsResponse {
+  repeated AuthorizedToolDescriptor tools = 1;
+}
+
+message ExecuteAuthorizedToolRequest {
+  string tool_id = 1;
+  string tool_version = 2;
+  string idempotency_key = 3;
+  string approved_action_id = 4;
+  google.protobuf.Struct arguments = 5;
+}
+
+message ExecuteAuthorizedToolResponse {
+  enum Status {
+    STATUS_UNSPECIFIED = 0;
+    STATUS_PENDING = 1;
+    STATUS_COMPLETED = 2;
+    STATUS_REJECTED = 3;
+    STATUS_FAILED = 4;
+    STATUS_UNKNOWN = 5;
+  }
+
+  Status status = 1;
+  google.protobuf.Struct result = 2;
+  string evidence_reference = 3;
+  string error_code = 4;
+}
+
+// Tool arguments are untrusted model output even with a typed envelope.
+// Java MUST validate full schema, permissions, org context, step-up approval,
+// idempotency, live provider capabilities and final authoritative outcomes.
