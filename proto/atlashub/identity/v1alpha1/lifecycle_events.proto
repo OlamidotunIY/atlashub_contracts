@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package atlashub.identity.v1alpha1;
+
+import "google/protobuf/timestamp.proto";
+
+option java_package = "com.atlashub.contracts.identity.v1alpha1";
+option java_multiple_files = true;
+option java_outer_classname = "LifecycleEventsProto";
+
+// Event contract candidates; Kafka/eventbus serializer choice and rollout are
+// separate decisions. User registration MUST NOT automatically create a business.
+message UserRegisteredEvent {
+  string event_id = 1;
+  string user_id = 2;
+  google.protobuf.Timestamp occurred_at = 3;
+}
+
+message OrganizationCreatedEvent {
+  string event_id = 1;
+  string organization_id = 2;
+  string owner_user_id = 3;
+  google.protobuf.Timestamp occurred_at = 4;
+}
