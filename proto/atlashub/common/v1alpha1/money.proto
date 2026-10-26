@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package atlashub.common.v1alpha1;
+
+option java_package = "com.atlashub.contracts.common.v1alpha1";
+option java_multiple_files = true;
+option java_outer_classname = "MoneyProto";
+
+// Transport representation only. Domain money invariants are enforced by owning service.
+// int64 is generated as a 64-bit value (typically bigint on modern TypeScript clients).
+// Consumers must understand ISO 4217 currency minor units: never use float for money.
+message Money {
+  int64 amount_minor_units = 1;
+  string currency_code = 2;
+}
