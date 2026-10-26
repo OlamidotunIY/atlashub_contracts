@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package atlashub.commerce.v1alpha1;
+
+import "atlashub/common/v1alpha1/money.proto";
+import "atlashub/common/v1alpha1/pagination.proto";
+
+option java_package = "com.atlashub.contracts.commerce.v1alpha1";
+option java_multiple_files = true;
+option java_outer_classname = "PublicCatalogProto";
+
+// PUBLIC STOREFRONT interface candidate, not an implemented Java service.
+// The verified hostname/storefront context is established by a trusted gateway,
+// NEVER from a caller-controlled organization_id in the request body.
+service PublicCatalogService {
+  rpc GetProduct(GetProductRequest) returns (GetProductResponse);
+  rpc ListProducts(ListProductsRequest) returns (ListProductsResponse);
+}
+
+message ProductView {
+  string id = 1;
+  string handle = 2;
+  string title = 3;
+  string description = 4;
+  atlashub.common.v1alpha1.Money displayed_price = 5;
+  string primary_image_url = 6;
+  bool available_for_purchase = 7;
+}
+
+message GetProductRequest {
+  string product_handle = 1;
+}
+
+message GetProductResponse {
+  ProductView product = 1;
+}
+
+message ListProductsRequest {
+  atlashub.common.v1alpha1.PageRequest page = 1;
+  string collection_handle = 2;
+}
+
+message ListProductsResponse {
+  repeated ProductView products = 1;
+  atlashub.common.v1alpha1.PageResponse page = 2;
+}
