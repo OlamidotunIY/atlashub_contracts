@@ -1,0 +1,7 @@
+# Development generation template. PIN remote plugin versions before release.
+version: v2
+plugins:
+  - remote: buf.build/protocolbuffers/java
+    out: gen/java
+  - remote: buf.build/grpc/java
+    out: gen/java
