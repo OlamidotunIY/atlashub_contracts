@@ -1,0 +1,11 @@
+# Generated output must be reproducible and package-published from CI.
+gen/
+dist/
+build/
+node_modules/
+.venv/
+__pycache__/
+*.pyc
+*.class
+.idea/
+.DS_Store
