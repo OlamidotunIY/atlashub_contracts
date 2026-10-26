@@ -1,0 +1,28 @@
+name: Protobuf schema checks
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  buf:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      # Setup-only: do not auto-publish our schemas or SDKs to any external registry.
+      - uses: bufbuild/buf-action@v1
+        with:
+          setup_only: true
+      - name: Lint schemas
+        run: buf lint
+      - name: Build descriptor graph
+        run: buf build
+      - name: Check compatibility against main
+        if: github.event_name == 'pull_request'
+        run: buf breaking --against '.git#branch=main'
