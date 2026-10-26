@@ -1,0 +1,6 @@
+# Development generation template. PIN remote plugin versions before release.
+# ALL schema generation is NOT a safe browser SDK; package public-only allowlist.
+version: v2
+plugins:
+  - remote: buf.build/bufbuild/es
+    out: gen/ts
